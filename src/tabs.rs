@@ -154,33 +154,37 @@ impl Widget for Tabs<'_>
 {
 	fn ui(mut self, ui: &mut Ui) -> Response
 	{
+		let rounding = self.rounding_override.unwrap_or(ui.visuals().widgets.noninteractive.rounding);
+		let bg_color = self.bg_fill_override.unwrap_or(ui.visuals().widgets.inactive.bg_fill);
+
 		// Find the biggest button, to make button size consistent
-		let mut biggest_size = Vec2::ZERO;
+		let mut button_size = Vec2::ZERO;
 		for tab in &self.tabs {
-			biggest_size = biggest_size.max(tab.clone().into_galley(ui, None, f32::MAX, TextStyle::Button).size());
+			button_size = button_size.max(tab.clone().into_galley(ui, None, f32::MAX, TextStyle::Button).size());
 		}
 
-		// Apply margin to biggest_size
-		biggest_size += self.outer_button_margin;
+		// Apply outer margin
+		button_size += self.outer_button_margin;
 
 		// Calculate total size of this widget then allocate it
-		let mut tabs_size = biggest_size;
+		let mut tabs_size = button_size;
 		if self.vertical { tabs_size.y = (tabs_size.y + self.inner_button_margin) * self.tabs.len() as f32 } 
-		else  { tabs_size.x = (tabs_size.x + self.inner_button_margin) * self.tabs.len() as f32 } 
+		else { tabs_size.x = (tabs_size.x + self.inner_button_margin) * self.tabs.len() as f32 }
 
 		let (rect, mut response) = ui.allocate_exact_size(tabs_size, Sense::click());
 		
 		// Paint bg element
-		ui.painter().rect_filled(
-			rect.expand(self.bg_margin),
-			self.rounding_override.unwrap_or(ui.visuals().widgets.noninteractive.rounding),
-			self.bg_fill_override.unwrap_or(ui.visuals().widgets.inactive.bg_fill)
-		);
+		if bg_color.a() > 0 {
+			ui.painter().rect_filled(
+				rect.expand(self.bg_margin),
+				rounding,
+				bg_color
+			);
+		}
 
 		// Buttons
 		let mut current_index = self.get_index(ui); // Stores the current index to be changed
 
-		let tabs_len = self.tabs.len(); // To please borrow checker
 		for (i, tab) in self.tabs.iter().enumerate()
 		{
 			ui.visuals_stack(|ui|
@@ -192,23 +196,21 @@ impl Widget for Tabs<'_>
 
 				// Calculate button position
 				let mut button_pos = rect.min;
-				if self.vertical { button_pos.y = button_pos.y + (rect.height() / tabs_len as f32) * i as f32 + self.inner_button_margin * i as f32}
-				else { button_pos.x = button_pos.x + (rect.width() / tabs_len as f32) * i as f32 + self.inner_button_margin * i as f32}
+				let f32i = i as f32; // To avoid tons of conversions
+
+				if self.vertical { button_pos.y += (button_size.y + self.inner_button_margin) * f32i }
+				else { button_pos.x += (button_size.x + self.inner_button_margin) * f32i }
+
 
 				// Display button
-				let button = ui.put(Rect::from_min_size(
-					button_pos,
-					biggest_size,
-				),
-					SelectableLabel::new(i == current_index, tab.clone())
-				);
+				let button = ui.put(Rect::from_min_size(button_pos, button_size), SelectableLabel::new(i == current_index, tab.clone()));
 
 				// Draw selectable_line under button, if width is above 0
 				if self.selected_line.1 > 0. && i == current_index
 				{
-					let center = button_pos.x + biggest_size.x / 2.;
-					let offset = (biggest_size.x / 2.) * self.selected_line.1;
-					ui.painter().hline((center-offset)..=(center+offset), button_pos.y + biggest_size.y + self.selected_line_y_offset, self.selected_line.0);
+					let center = button_pos.x + button_size.x / 2.;
+					let offset = (button_size.x / 2.) * self.selected_line.1;
+					ui.painter().hline((center-offset)..=(center+offset), button_pos.y + button_size.y + self.selected_line_y_offset, self.selected_line.0);
 				}
 	
 				// If clicked, change the current index

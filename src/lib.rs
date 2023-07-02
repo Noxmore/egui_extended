@@ -20,7 +20,7 @@ pub trait UiExtension
 	//// UTILITIES
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	/// DOes thing TODO: Document
+	/// Clones visuals, runs `add_contents`, then returns visuals to previous state
 	fn visuals_stack(&mut self, add_contents: impl FnOnce(&mut Ui));
 }
 
