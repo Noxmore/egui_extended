@@ -64,14 +64,6 @@ impl<'a> Tabs<'a>
 		}
 	}
 
-	// pub fn from_vec<T>(vec: &Vec<T>, title_fn: impl Fn(&T) -> WidgetText, ui_fn: impl FnOnce(&T, &mut Ui)) -> Self {
-	// 	Self {
-	// 		custom_index_backend: None,
-	// 		ui_fn: Box::new(|i, ui| ui_fn(&vec[i], ui)),
-	// 		tabs: vec.iter().map(title_fn).collect(),
-	// 		default: 0,
-	// 	}
-	// }
 
 	/// Adds a tab to this instance.
 	pub fn tab(mut self, tab: impl Into<WidgetText>) -> Self {
@@ -158,6 +150,7 @@ impl Widget for Tabs<'_>
 		let bg_color = self.bg_fill_override.unwrap_or(ui.visuals().widgets.inactive.bg_fill);
 
 		// Find the biggest button, to make button size consistent
+		// TODO: Support different sizes per button
 		let mut button_size = Vec2::ZERO;
 		for tab in &self.tabs {
 			button_size = button_size.max(tab.clone().into_galley(ui, None, f32::MAX, TextStyle::Button).size());
@@ -172,6 +165,17 @@ impl Widget for Tabs<'_>
 		else { tabs_size.x = (tabs_size.x + self.inner_button_margin) * self.tabs.len() as f32 }
 
 		let (rect, mut response) = ui.allocate_exact_size(tabs_size, Sense::click());
+
+		// PATCH: button alignment, i think i need to do this because `ui.allocate_exact_size` does allocate the exact size i want
+		// ...or my math is wrong. But it's fixed now and that's all that matters
+		{
+			if !self.vertical {
+				button_size.x = (rect.width() - self.inner_button_margin) / self.tabs.len() as f32;
+			}
+			else {
+				button_size.y = (rect.height() - self.inner_button_margin) / self.tabs.len() as f32;
+			}
+		}
 		
 		// Paint bg element
 		if bg_color.a() > 0 {
@@ -184,6 +188,11 @@ impl Widget for Tabs<'_>
 
 		// Buttons
 		let mut current_index = self.get_index(ui); // Stores the current index to be changed
+
+
+		//////////////////////////////////////////////////////////////////////////////////
+		//// BUTTONS
+		//////////////////////////////////////////////////////////////////////////////////
 
 		for (i, tab) in self.tabs.iter().enumerate()
 		{
@@ -204,6 +213,7 @@ impl Widget for Tabs<'_>
 
 				// Display button
 				let button = ui.put(Rect::from_min_size(button_pos, button_size), SelectableLabel::new(i == current_index, tab.clone()));
+
 
 				// Draw selectable_line under button, if width is above 0
 				if self.selected_line.1 > 0. && i == current_index
