@@ -47,3 +47,23 @@ impl WidgetsExtension for Widgets {
 		self.open.rounding = rounding;
 	}
 }
+
+
+pub trait WidgetExtension: Widget + Sized {
+	fn ui_sized(self, ui: &mut Ui, size: impl Into<Vec2>) -> Response {
+		ui.add_sized(size, self)
+	}
+	fn ui_enabled(self, ui: &mut Ui, enabled: bool) -> Response {
+		ui.add_enabled(enabled, self)
+	}
+	fn ui_sized_enabled(self, ui: &mut Ui, size: impl Into<Vec2>, enabled: bool) -> Response {
+		let mut response = None;
+		ui.add_enabled_ui(enabled, |ui| response = Some(ui.add_sized(size, self)));
+		// This is safe because, even though the rust compiler doesn't know it, the code in the above closure will run.
+		response.unwrap()
+	}
+	fn ui_visible(self, ui: &mut Ui, visible: bool) -> Response {
+		ui.add_visible(visible, self)
+	}
+}
+impl<T: Widget + Sized> WidgetExtension for T {}
