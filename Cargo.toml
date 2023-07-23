@@ -2,7 +2,14 @@
 name = "egui_extended"
 version = "0.3.0"
 edition = "2021"
-
+license = "MIT"
+description = "Lightweight library that adds more widgets, and utilities for working with `egui`."
+homepage = "https://github.com/Noxmore/egui_extended"
+documentation = "https://docs.rs/egui_extended"
+repository = "https://github.com/Noxmore/egui_extended"
+readme = "readme.md"
+keywords = ["egui", "utility"]
+categories = ["gui"]
 
 
 [dependencies]
