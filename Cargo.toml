@@ -7,8 +7,10 @@ edition = "2021"
 
 [dependencies]
 egui = "^0.22"
+serde = { version = "1", features = ["derive"], optional = true }
 
 [dev-dependencies]
 eframe = "^0.22"
 
-# TODO: Add serde feature
+# [features]
+# serde = ["dep:serde", "egui/serde"]
