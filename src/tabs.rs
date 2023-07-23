@@ -5,19 +5,25 @@ use egui::*;
 /// 
 /// # Examples
 /// ```
-/// ui.vertical_centered(|ui|
+/// use egui_extended::prelude::*;
+/// use egui::*;
+/// 
+/// egui::__run_test_ui(|ui|
 /// {
-/// 	Tabs::new("example_tabs", false)
-/// 		.tab("Tab #1")
-/// 		.tab("Second Tab")
-/// 		.rounding_override(Rounding::same(15.))
-/// 		.show(ui, |ui, i|
+/// 	ui.vertical_centered(|ui|
 /// 	{
-/// 		Separator::default().shrink(100.).ui(ui);
-///
-/// 		ui.vertical(|ui|
+/// 		Tabs::new("example_tabs", false)
+/// 			.tab("Tab #1")
+/// 			.tab("Second Tab")
+/// 			.rounding_override(Rounding::same(15.))
+/// 			.show(ui, |ui, i|
 /// 		{
-/// 			ui.heading(format!("Tab number: {i}"));
+/// 			Separator::default().shrink(100.).ui(ui);
+///
+/// 			ui.vertical(|ui|
+/// 			{
+/// 				ui.heading(format!("Tab number: {i}"));
+/// 			});
 /// 		});
 /// 	});
 /// });
@@ -71,7 +77,7 @@ impl<'a> Tabs<'a>
 		self
 	}
 	
-	crate::builder_set!{/// Sets the tabs used by this instance.
+	builder_set!{/// Sets the tabs used by this instance.
 		tabs: Vec<WidgetText>}
 	
 	pub fn tabs_from_vec<T>(mut self, vec: &Vec<T>, title_fn: impl Fn(&T) -> WidgetText) -> Self {
@@ -196,7 +202,7 @@ impl Widget for Tabs<'_>
 
 		for (i, tab) in self.tabs.iter().enumerate()
 		{
-			ui.visuals_stack(|ui|
+			ui.scope(|ui|
 			{
 				// Rounding override application
 				if let Some(rounding) = self.rounding_override {

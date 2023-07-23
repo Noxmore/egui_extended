@@ -1,7 +1,4 @@
-// TODO: Add support to doc comments in macro. ref: (https://docs.rs/bitflags/latest/src/bitflags/lib.rs.html#557-684)
-
-
-#[macro_export]
+/// Used for reducing boilerplate on builder set macros
 macro_rules! builder_set {
 	{$(#[$attr:meta])* $field:ident : $type:ty} => {
 		$(#[$attr])*
@@ -33,14 +30,17 @@ macro_rules! builder_set {
 		}
 	};
 }
+pub(crate) use builder_set;
 
-#[macro_export]
-macro_rules! builder_flag {
-	{$(#[$attr:meta])* $field:ident} => {
-		$(#[$attr])*
-		pub fn $field(mut self) -> Self {
-			self.$field = true;
-			self
-		}
-	};
-}
+
+// Un-used atm, could be useful later tho
+// #[macro_export]
+// macro_rules! builder_flag {
+// 	{$(#[$attr:meta])* $field:ident} => {
+// 		$(#[$attr])*
+// 		pub fn $field(mut self) -> Self {
+// 			self.$field = true;
+// 			self
+// 		}
+// 	};
+// }
