@@ -37,6 +37,7 @@ pub struct WidgetPlacement<T: Widget + Sized>
 	size: Option<Vec2>,
 	enabled: Option<bool>,
 	visible: Option<bool>,
+	visuals_modifiers: Vec<&'static dyn Fn(&mut Visuals)>
 }
 
 impl<T: Widget + Sized> WidgetPlacement<T>
@@ -48,6 +49,7 @@ impl<T: Widget + Sized> WidgetPlacement<T>
 			size: None,
 			enabled: None,
 			visible: None,
+			visuals_modifiers: Vec::new(),
 		}
 	}
 
@@ -62,6 +64,29 @@ impl<T: Widget + Sized> WidgetPlacement<T>
 
 	crate::builder_set!{/// Overrides whether the widget is visible or not
 		visible: bool => Some(visible)}
+
+	/// Adds a function that modifies the visuals used for this widget
+	/// 
+	/// Multiple visuals modifiers can be applied to the same widget placement
+	/// 
+	/// # Examples
+	/// ```
+	/// use egui_extended::prelude::*;
+	/// use egui::*;
+	/// 
+	/// egui::__run_test_ui(|ui|
+	/// {
+	/// 	Button::new("Test Button")
+	/// 		.place()
+	/// 		.size([120., 20.])
+	/// 		.visuals_modifier(&visuals_modifiers::no_background)
+	/// 		.ui(ui);
+	/// });
+	/// ```
+	pub fn visuals_modifier(mut self, modifier: &'static dyn Fn(&mut Visuals)) -> Self {
+		self.visuals_modifiers.push(modifier);
+		self
+	}
 }
 
 impl<T: Widget + Sized> Widget for WidgetPlacement<T>
@@ -72,6 +97,12 @@ impl<T: Widget + Sized> Widget for WidgetPlacement<T>
 
 		ui.scope(|ui|
 		{
+			// Apply visuals modifiers
+			let visuals = ui.visuals_mut();
+			for modifier in self.visuals_modifiers {
+				modifier(visuals);
+			}
+
 			if let Some(value) = self.enabled { ui.set_enabled(value); }
 			if let Some(value) = self.visible { ui.set_visible(value); }
 
