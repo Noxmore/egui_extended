@@ -15,10 +15,10 @@ categories = ["gui"]
 
 [dependencies]
 egui = "^0.22"
-# serde = { version = "1", features = ["derive"], optional = true }
+serde = { version = "1", features = ["derive"], optional = true }
 
 [dev-dependencies]
 eframe = "^0.22"
 
-# [features]
-# serde = ["dep:serde", "egui/serde"]
+[features]
+serde = ["dep:serde", "egui/serde"]
