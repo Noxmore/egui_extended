@@ -21,10 +21,10 @@ impl WidgetShowcaseApp
 {
 	fn new(cc: &CreationContext<'_>) -> Self
 	{
-		let mut visuals = Visuals::dark();
+		let mut visuals = Visuals::native(NativeThemeColorMode::SystemDefault);
 		
 		visuals.widgets.set_all_rounding(Rounding::same(5.));
-		visuals.widgets.noninteractive.fg_stroke = Stroke::new(1., Color32::WHITE);
+		// visuals.widgets.noninteractive.fg_stroke = Stroke::new(1., Color32::WHITE);
 
 		cc.egui_ctx.set_visuals(visuals);
 		cc.egui_ctx.set_pixels_per_point(1.2);
@@ -51,6 +51,12 @@ impl App for WidgetShowcaseApp
 					ui.vertical(|ui|
 					{
 						ui.heading(format!("Tab number: {i}"));
+						
+						Button::new("Test Button")
+							.place()
+							.size([120., 20.])
+							// .visuals_modifier(&visuals_modifiers::no_background)
+							.ui(ui);
 					});
 				});
 			});

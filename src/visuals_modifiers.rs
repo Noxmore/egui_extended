@@ -2,7 +2,7 @@
 //! 
 //! Usually used with widget placements
 
-use crate::prelude::*;
+use crate::*;
 
 /// Removes the background of widgets
 pub fn no_background(visuals: &mut Visuals) {

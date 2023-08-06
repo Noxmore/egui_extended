@@ -1,5 +1,4 @@
-use crate::prelude::*;
-use egui::*;
+use crate::*;
 
 /// Widget for switching between multiple tabs, current tab can be stored in `Ui` memory, or a specified `&mut usize`.
 /// 

@@ -4,6 +4,7 @@ version = "0.4.0"
 edition = "2021"
 license = "MIT"
 description = "Lightweight library that adds more widgets, and utilities for working with egui."
+authors = ["Noxmore"]
 homepage = "https://github.com/Noxmore/egui_extended"
 documentation = "https://docs.rs/egui_extended"
 repository = "https://github.com/Noxmore/egui_extended"
@@ -13,11 +14,16 @@ categories = ["gui"]
 
 
 [dependencies]
+dark-light = { version = "1.0", optional = true }
 egui = "^0.22"
-# serde = { version = "1", features = ["derive"], optional = true }
+lightningcss = { version = "1.0.0-alpha.44", optional = true }
+serde = { version = "1", features = ["derive"], optional = true }
 
 [dev-dependencies]
 eframe = "^0.22"
 
-# [features]
-# serde = ["dep:serde", "egui/serde"]
+[features]
+default = ["native_visuals"]
+
+serde = ["dep:serde", "egui/serde"]
+native_visuals = ["dep:dark-light", "dep:lightningcss"]

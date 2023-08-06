@@ -4,21 +4,25 @@ pub mod prelude;
 pub mod tabs;
 pub mod widget_placement;
 pub mod visuals_modifiers;
+#[cfg(feature = "native_visuals")]
+pub mod native_visuals;
 
 pub(crate) mod internal;
+
 pub(crate) use internal::*;
+pub(crate) use crate::prelude::*;
 
-use egui::{*, style::{Widgets, WidgetVisuals}};
 
-
-pub trait WidgetsExtension {
+pub trait WidgetsExtension
+{
 	/// Sets rounding for all widget states
 	fn set_all_rounding(&mut self, rounding: Rounding);
 
 	/// Modifies all widget state visuals using the specified modifier
 	fn modify_all(&mut self, modifier: impl Fn(&mut WidgetVisuals));
 }
-impl WidgetsExtension for Widgets {
+impl WidgetsExtension for Widgets
+{
 	fn set_all_rounding(&mut self, rounding: Rounding) {
 		self.modify_all(|widget| widget.rounding = rounding);
 	}
