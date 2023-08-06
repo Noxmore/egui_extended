@@ -1,11 +1,11 @@
 #![doc = include_str!("../readme.md")]
 
 pub mod prelude;
-pub mod tabs;
+pub mod connected_tabs;
 pub mod widget_placement;
 pub mod visuals_modifiers;
-#[cfg(feature = "native_visuals")]
-pub mod native_visuals;
+pub mod switch;
+pub mod custom_frame;
 
 pub(crate) mod internal;
 

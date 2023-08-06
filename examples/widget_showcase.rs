@@ -15,13 +15,14 @@ fn main()
 #[derive(Default)]
 struct WidgetShowcaseApp
 {
+	boolean: bool,
 }
 
 impl WidgetShowcaseApp
 {
 	fn new(cc: &CreationContext<'_>) -> Self
 	{
-		let mut visuals = Visuals::native(NativeThemeColorMode::SystemDefault);
+		let mut visuals = Visuals::dark();
 		
 		visuals.widgets.set_all_rounding(Rounding::same(5.));
 		// visuals.widgets.noninteractive.fg_stroke = Stroke::new(1., Color32::WHITE);
@@ -40,7 +41,7 @@ impl App for WidgetShowcaseApp
 		{
 			ui.vertical_centered(|ui|
 			{
-				Tabs::new("example_tabs", false)
+				ConnectedTabs::new("example_tabs", false)
 					.tab("Tab #1")
 					.tab("Second Tab")
 					.rounding_override(Rounding::same(15.))
@@ -51,7 +52,10 @@ impl App for WidgetShowcaseApp
 					ui.vertical(|ui|
 					{
 						ui.heading(format!("Tab number: {i}"));
-						
+
+						Switch::new(&mut self.boolean)
+							.ui(ui);
+
 						Button::new("Test Button")
 							.place()
 							.size([120., 20.])

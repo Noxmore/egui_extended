@@ -1,6 +1,7 @@
 use crate::*;
 
-/// Widget for switching between multiple tabs, current tab can be stored in `Ui` memory, or a specified `&mut usize`.
+/// Widget for switching between multiple connected tabs,
+/// current tab can be stored in `Ui` memory, or a specified `&mut usize`.
 /// 
 /// # Examples
 /// ```
@@ -11,7 +12,7 @@ use crate::*;
 /// {
 /// 	ui.vertical_centered(|ui|
 /// 	{
-/// 		Tabs::new("example_tabs", false)
+/// 		ConnectedTabs::new("example_tabs", false)
 /// 			.tab("Tab #1")
 /// 			.tab("Second Tab")
 /// 			.rounding_override(Rounding::same(15.))
@@ -28,7 +29,7 @@ use crate::*;
 /// });
 /// ```
 #[must_use = "You should put this widget in an ui with `ui.add(widget);`"]
-pub struct Tabs<'a>
+pub struct ConnectedTabs<'a>
 {
 	id: Id,
 
@@ -47,7 +48,7 @@ pub struct Tabs<'a>
 	vertical: bool,
 }
 
-impl<'a> Tabs<'a>
+impl<'a> ConnectedTabs<'a>
 {
 	pub fn new(id_source: impl std::hash::Hash, vertical: bool) -> Self {
 		Self {
@@ -147,7 +148,7 @@ impl<'a> Tabs<'a>
 	}
 }
 
-impl Widget for Tabs<'_>
+impl Widget for ConnectedTabs<'_>
 {
 	fn ui(mut self, ui: &mut Ui) -> Response
 	{

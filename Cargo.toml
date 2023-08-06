@@ -14,16 +14,11 @@ categories = ["gui"]
 
 
 [dependencies]
-dark-light = { version = "1.0", optional = true }
 egui = "^0.22"
-lightningcss = { version = "1.0.0-alpha.44", optional = true }
-serde = { version = "1", features = ["derive"], optional = true }
+# serde = { version = "1", features = ["derive"], optional = true }
 
 [dev-dependencies]
 eframe = "^0.22"
 
-[features]
-default = ["native_visuals"]
-
-serde = ["dep:serde", "egui/serde"]
-native_visuals = ["dep:dark-light", "dep:lightningcss"]
+# [features]
+# serde = ["dep:serde", "egui/serde"]
