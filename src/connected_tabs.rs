@@ -172,8 +172,7 @@ impl Widget for ConnectedTabs<'_>
 
 		let (rect, mut response) = ui.allocate_exact_size(tabs_size, Sense::click());
 
-		// PATCH: button alignment, i think i need to do this because `ui.allocate_exact_size` does allocate the exact size i want
-		// ...or my math is wrong. But it's fixed now and that's all that matters
+		// I need to do this because `ui.allocate_exact_size` does not always allocate the exact size i want
 		{
 			if !self.vertical {
 				button_size.x = (rect.width() - self.inner_button_margin) / self.tabs.len() as f32;

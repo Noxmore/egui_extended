@@ -35,7 +35,7 @@ impl WidgetShowcaseApp
 
 impl App for WidgetShowcaseApp
 {
-	fn update(&mut self, ctx: &Context, _frame: &mut eframe::Frame)
+	fn update(&mut self, ctx: &Context, frame: &mut eframe::Frame)
 	{
 		CentralPanel::default().show(ctx, |ui|
 		{
@@ -56,11 +56,24 @@ impl App for WidgetShowcaseApp
 						Switch::new(&mut self.boolean)
 							.ui(ui);
 
-						Button::new("Test Button")
-							.place()
-							.size([120., 20.])
-							// .visuals_modifier(&visuals_modifiers::no_background)
-							.ui(ui);
+						ui.add_space(100.);
+
+						let title_bar_buttons = TitleBarButtons::new()
+							.kind(TitleBarButtonsKind::Windows)
+							.focused(frame.info().window_info.focused)
+							.maximized(frame.info().window_info.maximized)
+							.rounding_override(1.5)
+							.show(ui);
+
+						for (button, response) in title_bar_buttons {
+							if response.clicked() {
+								match button {
+									TitleBarButton::Close => frame.close(),
+									TitleBarButton::Maximize => frame.set_maximized(!frame.info().window_info.maximized),
+									TitleBarButton::Minimize => frame.set_minimized(true),
+								}
+							}
+						}
 					});
 				});
 			});
